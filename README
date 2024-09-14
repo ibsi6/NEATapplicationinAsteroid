@@ -1,0 +1,94 @@
+README.
+
+This program is an implementation of the NEAT algorithm originally implemented by Ken Stanley. https://nn.cs.utexas.edu/?stanley:ec02
+
+The goal of this program is to view this implementation within the classic game "Asteriods"
+
+To run, simply run main.py . Arrow keys speed up/slow down program.
+
+
+
+
+
+
+
+--------------------------------------------------------
+How the evolutionary cycle works:
+	Initialization: A population of neural networks is initialized randomly.
+	Evaluation: Each player (controlled by its neural network) plays the game and is evaluated based on its fitness (how well it performs).
+	Speciation: The population is divided into species based on genome similarity.
+	Selection: The best players in each species are selected for reproduction.
+	Crossover and Mutation: The selected players produce offspring through crossover (combining two parents’ genomes) and mutation (changing weights and adding/removing connections).
+	Repeat: The next generation of players is created, and the cycle repeats.
+
+--------------------------------------------------------
+Brief description of core components:
+
+
+	Genome:
+
+	    Represents an individual neural network in the population.
+	    A genome consists of nodes (neurons) and genes (connections between neurons).
+	    The Genome class initializes the inputs and outputs of the network and is responsible for mutation, crossover, and generating the neural network structure dynamically.
+
+	Node:
+
+	    Nodes represent the neurons in the neural network. Each node processes input values and passes them through an activation function (sigmoid).
+	    The code ensures nodes calculate their output by processing the sum of their inputs and passing the result through the sigmoid function.
+	    Nodes are linked by connection genes and can evolve to form new connections.
+
+	Connection Gene:
+
+	    Represents a connection between two nodes in the network with a weight, controlling the strength of the connection.
+	    Connection genes can mutate their weights and can be enabled or disabled.
+	    NEAT tracks the innovation number of each connection to ensure that networks are compared correctly during the evolutionary process.
+
+	Population:
+
+	    Represents the collection of individuals (players) in each generation.
+	    The Population class handles:
+	        Updating: Each individual’s neural network is evaluated and updated in the game environment.
+	        Selection: The most successful players (based on their performance) are selected to produce offspring for the next generation.
+	        Speciation: Individuals are grouped into species based on their similarity. NEAT keeps similar genomes in the same species to preserve innovation.
+	        Natural Selection: Less fit individuals are culled, while fitter individuals reproduce to form the next generation.
+
+	Species:
+
+	    A species contains a group of individuals that are genetically similar.
+	    Each species tracks its best individual and its average fitness, and it is used to promote diversity in the population.
+	    The Species class ensures that new species are created when individuals are too different from the current species.
+
+
+	Player:
+
+	    Each player has a position, velocity, rotation, and a simple brain (neural network) evolved using NEAT.
+	    The Player class represents the game agent controlled by the evolved neural network.
+	    Players can boost their speed, rotate, and shoot bullets to destroy asteroids.
+
+	Asteroids:
+
+	    The Asteroid class represents the obstacles that players must avoid or destroy.
+	    Asteroids have random velocities, and their behavior (moving and splitting) is hardcoded.
+	    Players receive input about the positions and velocities of nearby asteroids through their neural network and must decide how to act.
+
+	Bullets:
+
+	    Players can shoot bullets to destroy asteroids. The Bullet class represents a projectile shot by a player.
+
+	Neural Network Decision Making:
+
+	    The player’s neural network takes in sensory inputs (like the position and velocity of nearby asteroids) and processes these inputs to make decisions (boost, rotate, shoot).
+	    The neural network’s output directly controls the player’s actions.
+
+	Fitness Function:
+
+	    Fitness in NEAT is how well a player performs in the game.
+	    In this case, fitness is influenced by:
+	        The player’s lifespan (how long they survive).
+	        The number of asteroids they destroy.
+	        Accuracy of their shots.
+	    The fitness of each player determines how likely it is to be selected for reproduction in the next generation.
+
+
+
+***some issues occured with overflows, so in certain places, such as the sigmoid activation, limits are placed on inputs to avoid overflow errors ***
